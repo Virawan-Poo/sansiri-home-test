@@ -5,18 +5,25 @@ const path = require("path");
 
 async function generateHTML() {
   try {
-    const response = await axios.get(
-      "https://sansiriplc2.app.n8n.cloud/webhook-test/get-hijack-projects"
-    );
+    // อ่าน payload จาก data.json (เขียนมาโดย GitHub Actions)
+    const dataPath = path.join(__dirname, "data.json");
+    let projects;
+    if (fs.existsSync(dataPath)) {
+      projects = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
+    } else {
+      // fallback สำหรับ local dev
+      const response = await axios.get(
+        "https://sansiriplc2.app.n8n.cloud/webhook-test/get-hijack-projects"
+      );
+      projects = response.data.data;
+    }
 
-    const projects = response.data.data;
     const templateContent = fs.readFileSync(
       path.join(__dirname, "template.html"),
       "utf-8"
     );
     const compileTemplate = Handlebars.compile(templateContent);
 
-    // ตรวจว่ามีโฟลเดอร์ pages ถ้ายังไม่มีให้สร้าง
     const outputDir = path.join(__dirname, "pages");
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir);
