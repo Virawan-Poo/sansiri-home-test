@@ -20,19 +20,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # ← แทนที่บล็อก “Save payload” แบบ bash → ทำเป็น GitHub Script
-      - name: Write payload to data.json
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const fs = require('fs');
-            // github.event.client_payload.data คือ array ของ projects ที่ส่งมา
-            fs.writeFileSync(
-              'data.json',
-              JSON.stringify(github.event.client_payload.data),
-              'utf-8'
-            );
-
       - name: Run render.js to generate HTML
         run: node render.js
 
