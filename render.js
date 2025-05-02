@@ -5,17 +5,10 @@ const path = require("path");
 
 async function generateHTML() {
   try {
-    // อ่าน payload จาก data.json (เขียนมาโดย GitHub Actions)
     const dataPath = path.join(__dirname, "data.json");
     let projects;
     if (fs.existsSync(dataPath)) {
       projects = JSON.parse(fs.readFileSync(dataPath, "utf-8"));
-    } else {
-      // fallback สำหรับ local dev
-      const response = await axios.get(
-        "https://sansiriplc2.app.n8n.cloud/webhook-test/get-hijack-projects"
-      );
-      projects = response.data.data;
     }
 
     const templateContent = fs.readFileSync(
