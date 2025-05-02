@@ -6,7 +6,7 @@ const path = require("path");
 async function generateHTML() {
   try {
     const response = await axios.get(
-      "http://localhost:5678/webhook/get-hijack-projects"
+      "https://sansiriplc2.app.n8n.cloud/webhook-test/get-hijack-projects"
     );
 
     const projects = response.data.data;
