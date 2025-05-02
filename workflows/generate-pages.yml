@@ -8,13 +8,10 @@ on:
 jobs:
   build-and-commit:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. เช็คเอาท์โค้ดจาก repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. ติดตั้ง Node.js และ dependencies
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -23,23 +20,29 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 3. เซฟ payload จาก n8n (ถ้าต้องการใช้)
-      - name: Save payload
-        run: |
-          printf '%s' "${{ toJson(github.event.client_payload.data) }}" > data.json
+      # ← แทนที่บล็อก “Save payload” แบบ bash → ทำเป็น GitHub Script
+      - name: Write payload to data.json
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            // github.event.client_payload.data คือ array ของ projects ที่ส่งมา
+            fs.writeFileSync(
+              'data.json',
+              JSON.stringify(github.event.client_payload.data),
+              'utf-8'
+            );
 
-      # 4. รันสคริปต์ generateHTML
-      - name: Run render.js
+      - name: Run render.js to generate HTML
         run: node render.js
 
-      # 5. Commit และ Push หน้า HTML ที่สร้างใหม่
       - name: Commit generated pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add pages/
-          git commit -m "🔄 Generate HTML pages via GitHub Actions"
+          git commit -m "🔄 Generate pages via GitHub Actions"
           git push
         env:
-          # จะใช้ token ที่ GitHub ให้มาโดยอัตโนมัติ
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
