@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ projectName }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .banner {
+            text-align: center;
+            background: #eee;
+            padding: 20px;
+        }
+
+        .concept,
+        .house-types,
+        .poi,
+        .contact {
+            margin-top: 40px;
+        }
+
+        .house-card,
+        .poi-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .floor-plan img {
+            width: 100px;
+            height: auto;
+            margin-right: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #0070f3;
+            color: #fff;
+            padding: 12px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .btn-line {
+            background: #00b900;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Banner -->
+    <div class="banner" style="position: relative;">
+        <picture>
+            <source media="(min-width: 992px)" srcset="{{ bannerDesktop }}">
+            <source media="(max-width: 991px)" srcset="{{ bannerMobile }}">
+            <img src="{{ bannerDesktop }}" alt="Banner" style="width: 100%; height: auto;">
+        </picture>
+
+        <!-- Text Overlay -->
+        <div style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            padding: 0 20px;
+            text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+        ">
+            {{{ bannerText }}}
+        </div>
+    </div>
+
+
+    <!-- Concept Section -->
+    <div class="concept">
+        <div>{{{ conceptTitle }}}</div>
+        <div>{{{ conceptDescription }}}</div>
+        <img src="{{ conceptImage }}" alt="Concept Image" style="width:100%;max-width:600px;margin-top:20px;">
+    </div>
+
+    <!-- House Types Section -->
+    <div class="house-types">
+        <h2>แบบบ้านในโครงการ</h2>
+        {{#each houseTypes}}
+        <div class="house-card">
+            <h3>{{ houseTypeName }}</h3>
+            <p>พื้นที่ใช้สอย: {{ houseSize }}</p>
+            <p>ขนาดที่ดินเริ่มต้น: {{ landSize }}</p>
+            <p>ราคาเริ่มต้น: {{ startingPrice }}</p>
+            <div class="house-function">
+                {{#each houseFunction}}
+                <p>{{ this }}</p>
+                {{/each}}
+            </div>
+            <div class="floor-plan">
+                {{#each floorPlans}}
+                <img src="{{ this }}" alt="Floor Plan">
+                {{/each}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <!-- POI Section -->
+    <div class="poi">
+        <h2>สถานที่ใกล้เคียง</h2>
+        {{#each pois}}
+        <h3>{{@key}}</h3>
+        <ul>
+            {{#each this}}
+            <li>{{placeName}} ({{distanceKm}} กม.)</li>
+            {{/each}}
+        </ul>
+        {{/each}}
+    </div>
+
+    <!-- Contact Section -->
+    <section>
+        <h2>แผนที่และการติดต่อ</h2>
+        <a href="{{mapUrl}}" target="_blank" class="btn">ดูแผนที่โครงการ</a><br>
+        โทร: {{contactPhone}}<br>
+        <a href="{{lineId}}" target="_blank" class="btn btn-line">แอดไลน์</a><br>
+        <a href="{{brochureUrl}}" target="_blank" class="btn">ดาวน์โหลดโบรชัวร์</a>
+    </section>
+
+</body>
+
+</html>
