@@ -26,9 +26,9 @@ jobs:
       # 3. เซฟ payload จาก n8n (ถ้าต้องการใช้)
       - name: Save payload
         run: |
-          echo '${{ toJson(github.event.client_payload.data) }}' > data.json
-
-
+          cat << 'EOF' > data.json
+          ${{ toJson(github.event.client_payload.data) }}
+          EOF
 
       # 4. รันสคริปต์ generateHTML
       - name: Run render.js
