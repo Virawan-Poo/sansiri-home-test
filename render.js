@@ -12,7 +12,7 @@ async function generateHTML() {
     }
 
     const templateContent = fs.readFileSync(
-      path.join(__dirname, "template.html"),
+      path.join(__dirname, "template2.html"),
       "utf-8"
     );
     const compileTemplate = Handlebars.compile(templateContent);
